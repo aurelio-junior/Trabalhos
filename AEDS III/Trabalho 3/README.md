@@ -411,13 +411,5 @@ Esse comando remove:
 - **Dijkstra** → tende a ser mais rápido em grafos pequenos e médios
 - **Bellman-Ford** → mais lento devido às múltiplas relaxações globais
 - **Duan** → busca reduzir relaxamentos desnecessários através de exploração local controlada
-
-# Autor
-
-    Disciplina: AEDS III
-    Professor: Iago A. Carvalho
-    Curso: Ciência da Computação – UNIFAL
-    Aluno: Pedro Brassi Luccas
-    Data: 14/05/2026
-    
+   
 Projeto desenvolvido para a disciplina de **AEDS III**, com foco na análise experimental de algoritmos de caminhos mínimos em grafos.

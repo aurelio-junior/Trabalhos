@@ -2,6 +2,7 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -O2 -Iinclude
 DEBUGFLAGS = -g -Wall -Wextra -Iinclude
+LIBS = -lm
 
 # ==========================================================
 # ARQUIVOS
@@ -21,14 +22,14 @@ all: $(TARGET)
 
 $(TARGET): $(SRC)
 	@mkdir -p bin
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LIBS)
 
 run: all
 	./$(TARGET)
 
 debug:
 	@mkdir -p bin
-	$(CC) $(DEBUGFLAGS) $(SRC) -o $(TARGET)
+	$(CC) $(DEBUGFLAGS) $(SRC) -o $(TARGET) $(LIBS)
 
 valgrind: debug
 	valgrind --leak-check=full --show-leak-kinds=all ./$(TARGET)
@@ -42,7 +43,7 @@ instancias: $(GENERATOR)
 
 $(GENERATOR): src/instancias.c
 	@mkdir -p bin
-	$(CC) $(CFLAGS) src/instancias.c -o $(GENERATOR)
+	$(CC) $(CFLAGS) src/instancias.c -o $(GENERATOR) $(LIBS)
 
 # ==========================================================
 # LIMPEZA
