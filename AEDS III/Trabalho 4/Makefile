@@ -1,64 +1,73 @@
 CC = gcc
 
 CFLAGS = -Wall -Wextra -O2 -Iinclude
-DEBUGFLAGS = -g -Wall -Wextra -Iinclude
-LIBS = -lm
+LDFLAGS = -lm
 
-# ==========================================================
-# ARQUIVOS
-# ==========================================================
-
-# Todos os .c EXCETO instancias.c
 SRC = $(filter-out src/instancias.c, $(wildcard src/*.c))
 
 TARGET = bin/main
 GENERATOR = bin/instancias
 
-# ==========================================================
-# PROGRAMA PRINCIPAL
-# ==========================================================
+VENV = venv
+PY = $(VENV)/bin/python
+PIP = $(VENV)/bin/pip
 
-all: $(TARGET)
+# ==========================================================
+# DEFAULT
+# ==========================================================
+all: setup instancias run plot
 
+# ==========================================================
+# VENV (não recria se já existir)
+# ==========================================================
+setup:
+	@if [ ! -d "$(VENV)" ]; then \
+		echo "Criando ambiente virtual..."; \
+		python3 -m venv $(VENV); \
+		$(PIP) install --upgrade pip; \
+		$(PIP) install numpy pandas matplotlib; \
+	else \
+		echo "venv já existe"; \
+	fi
+
+# ==========================================================
+# COMPILAÇÃO PRINCIPAL
+# ==========================================================
 $(TARGET): $(SRC)
 	@mkdir -p bin
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LIBS)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
 
-run: all
-	./$(TARGET)
-
-debug:
-	@mkdir -p bin
-	$(CC) $(DEBUGFLAGS) $(SRC) -o $(TARGET) $(LIBS)
-
-valgrind: debug
-	valgrind --leak-check=full --show-leak-kinds=all ./$(TARGET)
-
+run: $(TARGET)
+	./run_prompt.sh
+	
 # ==========================================================
 # GERADOR DE INSTÂNCIAS
 # ==========================================================
-
 instancias: $(GENERATOR)
 	./$(GENERATOR)
 
 $(GENERATOR): src/instancias.c
 	@mkdir -p bin
-	$(CC) $(CFLAGS) src/instancias.c -o $(GENERATOR) $(LIBS)
+	$(CC) $(CFLAGS) src/instancias.c -o $(GENERATOR) $(LDFLAGS)
 
 # ==========================================================
-# LIMPEZA
+# PLOT AUTOMÁTICO
 # ==========================================================
+plot: setup
+	@echo "Gerando gráficos..."
+	@mkdir -p Results/graficos
+	$(PY) plot.py
 
+# ==========================================================
+# LIMPEZA SEGURA
+# ==========================================================
 clean:
-	@echo "Removendo executáveis..."
-	rm -rf bin
+	@echo "Limpando projeto (sem apagar venv)..."
+	rm -rf bin instances Results
 
-	@echo "Removendo instâncias geradas..."
-	rm -rf instances
-
-	@echo "Removendo resultados..."
-	rm -rf Results
-
-	@echo "Limpeza completa!"
+# limpeza total opcional
+clean-all:
+	@echo "Limpando TUDO (incluindo venv)..."
+	rm -rf bin instances Results venv
 
 rebuild: clean all

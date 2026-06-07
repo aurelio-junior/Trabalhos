@@ -14,42 +14,75 @@
 #define INSTANCES_PER_SIZE 10
 
 /* =========================================================
-   Cria pasta Results
+   PATH GLOBAL DO RUN
 ========================================================= */
-void createResultsFolder() {
-    mkdir("Results", 0700);
+static char RESULTS_PATH[256] = "Results";
+
+/* =========================================================
+   DEFINE PATH DO RUN
+========================================================= */
+void setResultsPath(const char *path) {
+
+    if (path == NULL || strlen(path) == 0)
+        return;
+
+    snprintf(RESULTS_PATH, sizeof(RESULTS_PATH), "%s", path);
 }
 
 /* =========================================================
-   Abre arquivo geral
+   CRIA PASTAS DO RUN
+========================================================= */
+void createResultsFolder() {
+
+    char cmd[512];
+
+    snprintf(cmd, sizeof(cmd),"mkdir -p %s/graficos",RESULTS_PATH);
+
+    if (system(cmd) != 0) {
+        printf("Erro ao criar diretório de resultados\n");
+    }
+}
+
+/* =========================================================
+   ARQUIVO GERAL
 ========================================================= */
 FILE *openGeneralResults() {
 
-    FILE *file = fopen("Results/TodosResultados.txt", "w");
+    char path[512];
 
-    if (file == NULL) {
-        printf("Erro ao criar TodosResultados.txt\n");
+    snprintf(path, sizeof(path),
+             "%s/TodosResultados.txt",
+             RESULTS_PATH);
+
+    FILE *file = fopen(path, "w");
+
+    if (!file) {
+        printf("Erro ao criar %s\n", path);
         return NULL;
     }
 
-    fprintf(file, "Algoritmo,Instancia,Tamanho,Qualidade,TempoExecucao\n");
+    fprintf(file,
+            "Algoritmo,Instancia,Tamanho,Qualidade,TempoExecucao\n");
 
     return file;
 }
 
 /* =========================================================
-   Abre arquivo do algoritmo
+   ARQUIVO POR ALGORITMO
 ========================================================= */
 FILE *openAlgorithmFile(const char *algorithmName) {
 
-    char fileName[200];
+    char path[512];
 
-    snprintf(fileName, sizeof(fileName), "Results/%s.txt", algorithmName);
+    snprintf(path, sizeof(path),
+             "%s/%s.txt",
+             RESULTS_PATH,
+             algorithmName);
 
-    FILE *file = fopen(fileName, "w");
+    FILE *file = fopen(path, "w");
 
-    if (file == NULL) {
-        printf("Erro ao criar %s\n", fileName);
+    if (!file) {
+        printf("Erro ao criar %s\n", path);
         return NULL;
     }
 
@@ -57,7 +90,7 @@ FILE *openAlgorithmFile(const char *algorithmName) {
 }
 
 /* =========================================================
-   Executa os algoritmos para todas as instancias
+   EXECUÇÃO PRINCIPAL
 ========================================================= */
 void runExecutions() {
 
@@ -69,10 +102,7 @@ void runExecutions() {
     createResultsFolder();
 
     FILE *generalResults = openGeneralResults();
-
-    if (generalResults == NULL) {
-        return;
-    }
+    if (!generalResults) return;
 
     Algorithm algorithms[] = {
         {"PartitionProblem", randomPartition},
@@ -89,7 +119,7 @@ void runExecutions() {
         algorithmFiles[a] =
             openAlgorithmFile(algorithms[a].name);
 
-        if (algorithmFiles[a] == NULL) {
+        if (!algorithmFiles[a]) {
             fclose(generalResults);
             return;
         }
@@ -104,7 +134,9 @@ void runExecutions() {
         for (int a = 0; a < numberAlgorithms; a++) {
 
             fprintf(algorithmFiles[a],
-                    "====================\n===== %d =====\n====================\n\n",
+                    "====================\n"
+                    "===== %d =====\n"
+                    "====================\n\n",
                     sizes[i]);
         }
 
@@ -119,10 +151,9 @@ void runExecutions() {
                      sizes[i], sizes[i], j);
 
             int n;
-
             int *values = readInstance(path, &n);
 
-            if (values == NULL) {
+            if (!values) {
                 printf("Erro ao ler instancia.\n");
                 continue;
             }
@@ -131,12 +162,11 @@ void runExecutions() {
 
                 int *solution = malloc(n * sizeof(int));
 
-                if (solution == NULL) {
+                if (!solution) {
                     free(values);
                     continue;
                 }
 
-                /* inicialização segura */
                 for (int k = 0; k < n; k++)
                     solution[k] = 0;
 
@@ -146,38 +176,38 @@ void runExecutions() {
 
                 clock_t end = clock();
 
-                double executionTime = (double)(end - start) / CLOCKS_PER_SEC;
+                double time = (double)(end - start) / CLOCKS_PER_SEC;
 
                 fprintf(algorithmFiles[a],
-                        "Instancia %d:\nTempo de execução: %.6f secs\nPontos (fitness): %lld\n\n",
-                        j, executionTime, fitness);
+                        "Instancia %d:\n"
+                        "Tempo de execução: %.6f s\n"
+                        "Fitness: %lld\n\n",
+                        j, time, fitness);
 
                 fprintf(generalResults,
                         "%s,instancia_%d_%d.txt,%d,%lld,%.6f\n",
                         algorithms[a].name,
                         sizes[i], j, n,
-                        fitness,
-                        executionTime);
+                        fitness, time);
 
-                printf("- Finalizada para %s | Fitness: %lld | Tempo: %.6f\n",
+                printf("- Finalizada %s | Fitness %lld | %.6fs\n",
                        algorithms[a].name,
                        fitness,
-                       executionTime);
+                       time);
 
                 free(solution);
             }
 
-            printf("-- Salvo em Results\n");
-
+            printf("-- Salvo em %s\n", RESULTS_PATH);
             free(values);
         }
     }
 
-    for (int a = 0; a < numberAlgorithms; a++) {
+    for (int a = 0; a < numberAlgorithms; a++)
         fclose(algorithmFiles[a]);
-    }
 
     fclose(generalResults);
 
-    printf("\nTodos os resultados foram salvos na pasta Results\n");
+    printf("\nTodos os resultados salvos em %s\n",
+           RESULTS_PATH);
 }
