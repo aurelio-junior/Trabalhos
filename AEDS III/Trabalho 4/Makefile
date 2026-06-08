@@ -1,73 +1,131 @@
+# =======================================================================================
+#               INSTRUÇÕES DE USO DO MAKEFILE (MAPEAMENTO DE COMANDOS)
+# =======================================================================================
+# 'make'            -> Compila o programa principal e gera o executável dentro de 'output'
+# 'make instancias' -> Compila e roda o gerador automático que cria os arquivos de teste
+# 'make clean'      -> Remove todos os arquivos temporários (.o, .d), binários e pastas geradas
+# =======================================================================================
+
+# Define o compilador de C que será utilizado no projeto
 CC = gcc
 
-CFLAGS = -Wall -Wextra -O2 -Iinclude
-LDFLAGS = -lm
+# Define as flags de compilação:
+# -Wall: Ativa os avisos (warnings) estruturais comuns
+# -Wextra: Ativa avisos adicionais mais rígidos de boas práticas
+# -g: Inclui informações de depuração (permite usar o GDB/Valgrind para debugar)
+CFLAGS  := -Wall -Wextra -g
 
-SRC = $(filter-out src/instancias.c, $(wildcard src/*.c))
+# Define caminhos e flags de bibliotecas externas (-lm vincula a biblioteca matemática <math.h>)
+LFLAGS = -lm
 
-TARGET = bin/main
-GENERATOR = bin/instancias
+# Definição da árvore de diretórios padrão do projeto
+OUTPUT  := output
+SRC     := src
+INCLUDE := include
+LIB     := lib
 
-VENV = venv
-PY = $(VENV)/bin/python
-PIP = $(VENV)/bin/pip
+# =======================================================================================
+#          BLOCO MULTIPLATAFORMA: DETECÇÃO AUTOMÁTICA DO SISTEMA OPERACIONAL
+# =======================================================================================
+ifeq ($(OS),Windows_NT)
+    # --- Configurações nativas para ambiente Windows ---
+    MAIN        := main.exe
+    SOURCEDIRS  := $(SRC)
+    INCLUDEDIRS := $(INCLUDE)
+    LIBDIRS     := $(LIB)
+    # Função interna para substituir barras normais (/) por barras invertidas (\) exigidas pelo CMD
+    FIXPATH     = $(subst /,\,$1)
+    RM          := del /q /f
+    MD          := mkdir
+    
+    # Variáveis dedicadas ao utilitário gerador de instâncias
+    GERADOR     := tools\instancias.exe
+    RUN_GERADOR := cd tools && instancias.exe
+    RMDIR       := rmdir /s /q
+else
+    # --- Configurações nativas para ambiente POSIX (Linux / macOS) ---
+    MAIN        := main
+    # Usa o comando shell 'find' para mapear recursivamente todos os subdiretórios
+    SOURCEDIRS  := $(shell find $(SRC) -type d)
+    INCLUDEDIRS := $(shell find $(INCLUDE) -type d)
+    LIBDIRS     := $(shell find $(LIB) -type d)
+    # Nos sistemas Unix, as barras normais (/) já estão corretas, então a função mantém o texto intacto
+    FIXPATH     = $1
+    RM          = rm -f
+    MD          := mkdir -p # O parâmetro '-p' cria pastas pais caso não existam e evita erros se já existirem
+    
+    # Variáveis dedicadas ao utilitário gerador de instâncias
+    GERADOR     := tools/instancias
+    RUN_GERADOR := cd tools && ./instancias
+    RMDIR       := rm -rf
+endif
+# =======================================================================================
 
-# ==========================================================
-# DEFAULT
-# ==========================================================
-all: setup instancias run plot
+# Adiciona o prefixo '-I' antes de cada diretório de include para avisar o GCC onde buscar os headers (.h)
+INCLUDES    := $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
 
-# ==========================================================
-# VENV (não recria se já existir)
-# ==========================================================
-setup:
-	@if [ ! -d "$(VENV)" ]; then \
-		echo "Criando ambiente virtual..."; \
-		python3 -m venv $(VENV); \
-		$(PIP) install --upgrade pip; \
-		$(PIP) install numpy pandas matplotlib; \
-	else \
-		echo "venv já existe"; \
-	fi
+# Adiciona o prefixo '-L' antes de cada diretório para mapear os caminhos de bibliotecas estáticas (.a / .lib)
+LIBS        := $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
-# ==========================================================
-# COMPILAÇÃO PRINCIPAL
-# ==========================================================
-$(TARGET): $(SRC)
-	@mkdir -p bin
-	$(CC) $(CFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
+# Mapeia dinamicamente todos os arquivos de código-fonte (.c) encontrados nas pastas de origem
+SOURCES     := $(wildcard $(patsubst %,%/*.c, $(SOURCEDIRS)))
 
-run: $(TARGET)
-	./run_prompt.sh
-	
-# ==========================================================
-# GERADOR DE INSTÂNCIAS
-# ==========================================================
-instancias: $(GENERATOR)
-	./$(GENERATOR)
+# Define que para cada arquivo .c listado, haverá um arquivo correspondente de código objeto (.o)
+OBJECTS     := $(SOURCES:.c=.o)
 
-$(GENERATOR): src/instancias.c
-	@mkdir -p bin
-	$(CC) $(CFLAGS) src/instancias.c -o $(GENERATOR) $(LDFLAGS)
+# Define arquivos de dependência (.d). Eles guardam quais cabeçalhos cada arquivo .c utiliza
+DEPS        := $(OBJECTS:.o=.d)
 
-# ==========================================================
-# PLOT AUTOMÁTICO
-# ==========================================================
-plot: setup
-	@echo "Gerando gráficos..."
-	@mkdir -p Results/graficos
-	$(PY) plot.py
+# Normaliza o caminho final do executável principal aplicando as barras corretas do SO
+OUTPUTMAIN  := $(call FIXPATH,$(OUTPUT)/$(MAIN))
 
-# ==========================================================
-# LIMPEZA SEGURA
-# ==========================================================
+
+# =======================================================================================
+#                               REGRAS E ALVOS DE COMPILAÇÃO
+# =======================================================================================
+
+# Regra padrão executada ao digitar apenas 'make' ou 'make all'
+all: $(OUTPUT) $(MAIN)
+	@echo Execução completa realizada!
+
+# Cria o diretório de saída binária caso ele não exista
+$(OUTPUT):
+	$(MD) $(OUTPUT)
+
+# Linkagem Final: Junta todos os arquivos objeto (.o) coletados e constrói o executável principal
+$(MAIN): $(OBJECTS) 
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS) $(LFLAGS) $(LIBS)
+
+# Compila o utilitário isolado que gera os arquivos de instâncias de teste
+$(GERADOR): tools/instancias.c
+	$(CC) $(CFLAGS) tools/instancias.c -o $(GERADOR)
+
+# Comando 'make instancias': Compila o gerador e o executa para popular a pasta de testes
+.PHONY: instancias
+instancias: $(GERADOR)
+	$(RUN_GERADOR)
+	@echo Instancias geradas com sucesso!
+
+# Inclui os arquivos de dependência (.d). Se um arquivo .h mudar, o Make sabe que precisa re-compilar o .c dele
+-include $(DEPS)
+
+# Regra Implícita: Compila de forma incremental cada arquivo .c em seu respectivo .o
+# A flag -MMD diz ao GCC para criar as árvores de dependência dinamicamente enquanto compila
+.c.o:
+	$(CC) $(CFLAGS) $(INCLUDES) -c -MMD $<  -o $@
+
+# Comando 'make clean': Faxina completa do projeto para resetar o espaço de trabalho
+.PHONY: clean
 clean:
-	@echo "Limpando projeto (sem apagar venv)..."
-	rm -rf bin instances Results
+	$(RM) $(OUTPUTMAIN)
+	$(RM) $(call FIXPATH,$(OBJECTS))
+	$(RM) $(call FIXPATH,$(DEPS))
+	$(RM) $(call FIXPATH,$(GERADOR))
+	-$(RMDIR) $(call FIXPATH,instancias) # O hífen '-' antes do comando ignora erros caso a pasta não exista
+	-$(RMDIR) $(call FIXPATH,resultados)  # Remove os relatórios gerados pelas baterias de testes
+	@echo Limpeza completa!
 
-# limpeza total opcional
-clean-all:
-	@echo "Limpando TUDO (incluindo venv)..."
-	rm -rf bin instances Results venv
-
-rebuild: clean all
+# Comando experimental 'make run': Compila tudo e já executa o programa imediatamente
+run: all
+	./$(OUTPUTMAIN)
+	@echo Execucao 'run: all' completa!
