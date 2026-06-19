@@ -1,7 +1,7 @@
 # README – Trabalho Semestral
 
-**Orientação a Objetos – Bacharelado em Ciência da Computação**  
-**Apresentação:** 29 de junho de 2026  
+**Orientação a Objetos – Bacharelado em Ciência da Computação** 
+**Apresentação:** 29 de junho de 2026 
 **Professor:** Rodrigo Martins Pagliares
 
 ---
@@ -47,7 +47,7 @@ As 59 histórias foram divididas igualmente entre os 5 integrantes (11–12 por 
 
 | Código | Tipo | Título |
 |---------|------|---------|
-| US-2361 | US | Cadastrar avaliações em turmas |
+| US-2361 | US | Registering Assessments in Classes |
 | TUS-2362 | TUS | Persist class assessments to TXT File |
 | US-2363 | US | Register classes through keyboard input |
 | US-2364 | US | Manage academic system through command line menu |
@@ -143,7 +143,7 @@ Marque cada item conforme o trabalho avança e realize commit da versão mais re
 
 ## 👤 Pedro – US-2361 a US-2372
 
-- [ ] US-2361 – Cadastrar avaliações em turmas
+- [OK] US-2361 – Registering Assessments in Classes
 - [ ] TUS-2362 – Persist class assessments to TXT File
 - [ ] US-2363 – Register classes through keyboard input
 - [ ] US-2364 – Manage academic system through command line menu
@@ -229,6 +229,6 @@ Marque cada item conforme o trabalho avança e realize commit da versão mais re
 
 ---
 
-**Grupo:** Pedro | Aurelio | Julia | Otavio 27 | Otavio 30  
-**Professor:** Rodrigo Martins Pagliares  
+**Grupo:** Pedro | Aurelio | Julia | Otavio 27 | Otavio 30 
+**Professor:** Rodrigo Martins Pagliares 
 **Data da apresentação:** 29/06/2026
