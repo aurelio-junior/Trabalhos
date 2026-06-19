@@ -143,9 +143,9 @@ Marque cada item conforme o trabalho avança e realize commit da versão mais re
 
 ## 👤 Pedro – US-2361 a US-2372
 
-- [OK] US-2361 – Registering Assessments in Classes
-- [ ] TUS-2362 – Persist class assessments to TXT File
-- [ ] US-2363 – Register classes through keyboard input
+- [✅] US-2361 – Registering Assessments in Classes
+- [✅] TUS-2362 – Persist class assessments to TXT File
+- [✅] US-2363 – Register classes through keyboard input
 - [ ] US-2364 – Manage academic system through command line menu
 - [ ] TUS-2365 – Refactor domain model using Lombok
 - [ ] US-2366 – Authenticate users and authorize actions based on roles

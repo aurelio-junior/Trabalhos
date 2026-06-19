@@ -1,38 +1,37 @@
 package org.example.academic.system;
 
-import org.example.academic.system.factory.AssessmentFactory;
-import org.example.academic.system.model.*;
+import org.example.academic.system.controller.ClassController;
 import org.example.academic.system.repository.TxtClassRepository;
+import org.example.academic.system.service.ClassService;
+
+import java.util.Scanner;
 
 public class AcademicSystemApplication {
 
     public static void main(String[] args) {
 
         TxtClassRepository repository = new TxtClassRepository();
+        ClassService service = new ClassService(repository);
+        ClassController controller = new ClassController(service);
 
-        SchoolClass classA = new SchoolClass("POO-01");
+        Scanner scanner = new Scanner(System.in);
 
-        classA.addAssessment(
-                AssessmentFactory.create(
-                        AssessmentType.EXAM,
-                        8.5,
-                        0.4
-                )
-        );
+        System.out.println("=== Register Class ===");
 
-        classA.addAssessment(
-                AssessmentFactory.create(
-                        AssessmentType.SEMINAR,
-                        9.0,
-                        0.3
-                )
-        );
+        try {
 
-        repository.save(classA);
+            System.out.print("Enter class code: ");
+            String code = scanner.nextLine();
 
-        // AC1 - gera TXT
-        repository.exportToTxt("classes.txt");
+            System.out.print("Enter class title: ");
+            String title = scanner.nextLine();
 
-        System.out.println("TXT generated successfully!");
+            controller.registerClass(code, title);
+
+            System.out.println("Class registered successfully!");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 }
