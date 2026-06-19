@@ -1,20 +1,12 @@
 package org.example.academic.system.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public abstract class Assessment {
 
-    private final double value;
-    private final double weight;
-
-    protected Assessment(double value, double weight) {
-        this.value = value;
-        this.weight = weight;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
+    private double value;
+    private double weight;
 }

@@ -15,7 +15,7 @@ public class AssessmentFactory {
         }
 
         return switch (type) {
-            case EXAM -> new Exam(value, weight);
+            case EXAM -> new Sminar(value, weight);
             case PRACTICAL_ASSIGNMENT -> new PracticalAssignment(value, weight);
             case SEMINAR -> new Seminar(value, weight);
             case ASSIGNMENT -> new Assignment(value, weight);
