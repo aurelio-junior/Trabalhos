@@ -1,0 +1,6 @@
+org/example/academic/system/PersistenceRepositoryTest.class
+org/example/academic/system/ReportGenerationTest.class
+org/example/academic/system/DomainValidationTest.class
+org/example/academic/system/AuthenticationTest.class
+org/example/academic/system/AuthorizationTest.class
+org/example/academic/system/LoggingInfrastructureTest.class
