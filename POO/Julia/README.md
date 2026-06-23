@@ -30,10 +30,3 @@ Maven que compila e roda os testes sozinho, pra eu conseguir mostrar que
 ```bash
 mvn test
 ```
-
-## Observação pra integração
-
-As classes de apoio (model, security, repository, ReportService) estão aqui em
-versão base só pra os testes rodarem. Na hora de juntar tudo no `Final/`, elas
-encostam nas versões do Pedro (US-2366, US-2369), Aurélio (US-2373/2374, relatórios)
-e Otávio (services). O que é meu de fato: os testes, o logging e o ClassService.
