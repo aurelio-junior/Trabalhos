@@ -1,4 +1,4 @@
-## O que está aqui
+## O que foi adicionado.
 
 **Assessments (US-2361)**
 - `model/Assessment.java` – classe abstrata base para os quatro tipos de avaliação.

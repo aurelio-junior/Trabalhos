@@ -147,14 +147,14 @@ Marque cada item conforme o trabalho avança e realize commit da versão mais re
 - [✅] TUS-2362 – Persist class assessments to TXT File
 - [✅] US-2363 – Register classes through keyboard input
 - [✅] US-2364 – Manage academic system through command line menu
-- [ ] TUS-2365 – Refactor domain model using Lombok
-- [ ] US-2366 – Authenticate users and authorize actions based on roles
-- [ ] US-2367 – Handle academic domain errors with custom exceptions
-- [ ] US-2368 – Handle keyboard input errors with custom exceptions
-- [ ] US-2369 – Handle authentication and authorization errors
-- [ ] TUS-2370 – Refactor menu operations into AcademicSystemController
-- [ ] TUS-2371 – Validate academic domain objects using Jakarta Bean Validation
-- [ ] US-2372 – Configure persistence type as administrator
+- [✅] TUS-2365 – Refactor domain model using Lombok
+- [✅] US-2366 – Authenticate users and authorize actions based on roles
+- [✅] US-2367 – Handle academic domain errors with custom exceptions
+- [✅] US-2368 – Handle keyboard input errors with custom exceptions
+- [✅] US-2369 – Handle authentication and authorization errors
+- [✅] TUS-2370 – Refactor menu operations into AcademicSystemController
+- [✅] TUS-2371 – Validate academic domain objects using Jakarta Bean Validation
+- [✅] US-2372 – Configure persistence type as administrator
 
 ## 👤 Aurelio – US-2373 a TUS-2384
 
@@ -173,18 +173,18 @@ Marque cada item conforme o trabalho avança e realize commit da versão mais re
 
 ## 👤 Julia – TUS-2385 a TUS-2396
 
-- [ ] TUS-2385 – Test academic domain validation
-- [ ] S-2386 – Test authentication behavior
-- [ ] US-2387 – Test authorization behavior
-- [ ] US-2388 – Test report generation
-- [ ] US-2389 – Test persistence repositories
-- [ ] TUS-2390 – Configure application logging infrastructure
-- [ ] TUS-2391 – Log authentication and logout events
-- [ ] TUS-2392 – Log authorization failures
-- [ ] TUS-2393 – Log persistence operations
-- [ ] TUS-2394 – Log report generation
-- [ ] TUS-2395 – Verify logging infrastructure behavior
-- [ ] TUS-2396 – Introduce ClassService
+- [✅] TUS-2385 – Test academic domain validation
+- [✅] S-2386 – Test authentication behavior
+- [✅] US-2387 – Test authorization behavior
+- [✅] US-2388 – Test report generation
+- [✅] US-2389 – Test persistence repositories
+- [✅] TUS-2390 – Configure application logging infrastructure
+- [✅] TUS-2391 – Log authentication and logout events
+- [✅] TUS-2392 – Log authorization failures
+- [✅] TUS-2393 – Log persistence operations
+- [✅] TUS-2394 – Log report generation
+- [✅] TUS-2395 – Verify logging infrastructure behavior
+- [✅] TUS-2396 – Introduce ClassService
 
 ## 👤 Otavio 27 – TUS-2397 a TUS-2414
 
