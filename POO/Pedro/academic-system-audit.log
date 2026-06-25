@@ -1,0 +1,6 @@
+2026-06-25 17:41:23 [main] WARN  o.e.a.s.repository.TxtUserRepository - User file 'users.txt' not found. Loading default users.
+2026-06-25 17:41:32 [main] INFO  o.e.a.s.s.AuthenticationService - Authentication attempt for username: 'Pedro'
+2026-06-25 17:41:32 [main] WARN  o.e.a.s.s.AuthenticationService - Authentication failed for username: 'Pedro'
+2026-06-25 17:41:52 [main] INFO  o.e.a.s.s.AuthenticationService - Authentication attempt for username: 'Pedro'
+2026-06-25 17:41:52 [main] WARN  o.e.a.s.s.AuthenticationService - Authentication failed for username: 'Pedro'
+2026-06-25 17:42:27 [main] WARN  o.e.a.s.repository.TxtUserRepository - User file 'users.txt' not found. Loading default users.
