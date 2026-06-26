@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import org.example.academic.system.dto.ClassAssessmentReportDTO;
 import org.example.academic.system.service.ClassAssessmentReportService;
+import org.example.academic.system.dto.AssessmentWeightReportDTO;
+import org.example.academic.system.service.AssessmentWeightReportService;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +24,7 @@ public class AcademicService {
     private static final Logger log = LoggerFactory.getLogger(AcademicService.class);
     private final AcademicClassRepository repository;
     private final ClassAssessmentReportService reportService = new ClassAssessmentReportService();
-
+    private final AssessmentWeightReportService weightReportService = new AssessmentWeightReportService();
     public AcademicService(AcademicClassRepository repository) {
         this.repository = repository;
     }
@@ -69,6 +71,9 @@ public class AcademicService {
         return reportService.generate(listAllClasses());
     }
 
+    public List<AssessmentWeightReportDTO> generateAssessmentWeightReport() {
+        return weightReportService.generate(listAllClasses());
+    }
 
     public Optional<AcademicClass> findByCode(String code) {
         return repository.findByCode(code);

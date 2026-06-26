@@ -10,7 +10,7 @@ import org.example.academic.system.service.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.example.academic.system.dto.ClassAssessmentReportDTO;
-
+import org.example.academic.system.dto.AssessmentWeightReportDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +88,16 @@ public class AcademicSystemController {
         return academicService.generateClassAssessmentReport();
     }
 
+    public List<AssessmentWeightReportDTO> generateAssessmentWeightReport() {
+
+        var user = authService.getCurrentUser();
+
+        log.info("Assessment weight report generated | user='{}' | role='{}'",
+                user.getUsername(),
+                user.getRole());
+
+        return academicService.generateAssessmentWeightReport();
+    }
     /** Returns the currently configured persistence type (US-2372 AC8). */
     public PersistenceType getCurrentPersistenceType() {
         return persistenceService.getCurrentType();
