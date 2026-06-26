@@ -13,6 +13,7 @@ import org.example.academic.system.service.ClassAssessmentReportService;
 import org.example.academic.system.dto.AssessmentWeightReportDTO;
 import org.example.academic.system.service.AssessmentWeightReportService;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class AcademicService {
     private final AcademicClassRepository repository;
     private final ClassAssessmentReportService reportService = new ClassAssessmentReportService();
     private final AssessmentWeightReportService weightReportService = new AssessmentWeightReportService();
+    private final PersistenceConfigReportService persistenceReportService = new PersistenceConfigReportService();
     public AcademicService(AcademicClassRepository repository) {
         this.repository = repository;
     }
@@ -73,6 +75,10 @@ public class AcademicService {
 
     public List<AssessmentWeightReportDTO> generateAssessmentWeightReport() {
         return weightReportService.generate(listAllClasses());
+    }
+
+    public List<PersistenceConfigReportDTO> generatePersistenceConfigReport(PersistenceType type) {
+        return persistenceReportService.generate(type);
     }
 
     public Optional<AcademicClass> findByCode(String code) {
