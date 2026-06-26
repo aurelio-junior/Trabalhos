@@ -9,6 +9,8 @@ import org.example.academic.system.service.AcademicService;
 import org.example.academic.system.service.PersistenceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.example.academic.system.dto.ClassAssessmentReportDTO;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +74,18 @@ public class AcademicSystemController {
         persistenceService.setPersistenceType(type);
         log.info("Persistence configuration updated to '{}' by user '{}'",
                 type, authService.getCurrentUser().getUsername());
+    }
+
+
+    public List<ClassAssessmentReportDTO> generateClassAssessmentReport() {
+
+        var user = authService.getCurrentUser();
+
+        log.info("Class assessment report generated | user='{}' | role='{}'",
+                user.getUsername(),
+                user.getRole());
+
+        return academicService.generateClassAssessmentReport();
     }
 
     /** Returns the currently configured persistence type (US-2372 AC8). */

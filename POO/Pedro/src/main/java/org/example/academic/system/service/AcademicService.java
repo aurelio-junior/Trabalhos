@@ -8,6 +8,9 @@ import org.example.academic.system.validation.DomainValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.example.academic.system.dto.ClassAssessmentReportDTO;
+import org.example.academic.system.service.ClassAssessmentReportService;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,7 @@ public class AcademicService {
 
     private static final Logger log = LoggerFactory.getLogger(AcademicService.class);
     private final AcademicClassRepository repository;
+    private final ClassAssessmentReportService reportService = new ClassAssessmentReportService();
 
     public AcademicService(AcademicClassRepository repository) {
         this.repository = repository;
@@ -59,6 +63,12 @@ public class AcademicService {
                     "Invalid assessment type: " + type + ". Valid types: 1=Exam, 2=PracticalAssignment, 3=Seminar, 4=Assignment");
         };
     }
+
+
+    public List<ClassAssessmentReportDTO> generateClassAssessmentReport() {
+        return reportService.generate(listAllClasses());
+    }
+
 
     public Optional<AcademicClass> findByCode(String code) {
         return repository.findByCode(code);
