@@ -1,0 +1,39 @@
+package org.example.academic.system;
+
+import org.example.academic.system.model.AcademicClass;
+import org.example.academic.system.model.User;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DomainEqualityTest {
+
+    // TUS-2383: Valida se o JUnit e o Mockito estão funcionando juntos no projeto
+    @Test
+    void testInfrastructureIsWorkingWithMockito() {
+        Runnable mockRunnable = Mockito.mock(Runnable.class);
+        assertNotNull(mockRunnable);
+        assertTrue(true);
+    }
+
+    // TUS-2384: Garante que turmas com o mesmo código são iguais e têm o mesmo hashCode
+    @Test
+    void testAcademicClassEqualityAndHashCode() {
+        AcademicClass class1 = new AcademicClass("CS101", "Mathematics");
+        AcademicClass class2 = new AcademicClass("CS101", "Advanced Calculus");
+
+        assertEquals(class1, class2, "Classes com o mesmo código devem ser iguais.");
+        assertEquals(class1.hashCode(), class2.hashCode(), "Classes iguais devem ter o mesmo hashCode.");
+    }
+
+    // TUS-2384: Garante que usuários com o mesmo username são iguais e têm o mesmo hashCode
+    @Test
+    void testUserEqualityAndHashCode() {
+        User user1 = new User("coordenador", "senha123", User.Role.ADMIN);
+        User user2 = new User("coordenador", "outraSenha", User.Role.PROFESSOR);
+
+        assertEquals(user1, user2, "Usuários com o mesmo username devem ser iguais.");
+        assertEquals(user1.hashCode(), user2.hashCode(), "Usuários iguais devem ter o mesmo hashCode.");
+    }
+}

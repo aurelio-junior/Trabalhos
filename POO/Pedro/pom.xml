@@ -16,7 +16,6 @@
     </properties>
 
     <dependencies>
-        <!-- Lombok (apenas para compilação) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -24,28 +23,24 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Jakarta Bean Validation API -->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
 
-        <!-- Hibernate Validator (implementação) -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.1.Final</version>
         </dependency>
 
-        <!-- EL implementation (necessário para o Hibernate Validator) -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
             <version>4.0.2</version>
         </dependency>
 
-        <!-- SLF4J API + Logback (binding) -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -57,18 +52,30 @@
             <version>1.5.6</version>
         </dependency>
 
-        <!-- JUnit 5 (apenas para testes) -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Compilador com suporte ao Lombok -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -84,7 +91,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin para gerar o JAR padrão (sem dependências) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -98,7 +104,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin Shade: gera um JAR com todas as dependências embutidas -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -111,12 +116,10 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <!-- Define a classe principal no MANIFEST.MF -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.example.academic.system.Main</mainClass>
                                 </transformer>
                             </transformers>
-                            <!-- Remove arquivos de assinatura para evitar conflitos -->
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
@@ -127,9 +130,6 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <!-- (Opcional) Gera um JAR com sufixo "-shaded" para não sobrescrever o original -->
-                            <!-- <shadedArtifactAttached>true</shadedArtifactAttached> -->
-                            <!-- <classifier>shaded</classifier> -->
                         </configuration>
                     </execution>
                 </executions>
